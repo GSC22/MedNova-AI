@@ -371,11 +371,6 @@ mednova-ai/
 - In any medical emergency, **call 112 immediately**
 ---
 
-## 📄 License
- 
-MIT License — free to use, modify, and distribute.
- 
----
 
 <div align="center">
 Built with Google Gemini AI · Next.js · OpenStreetMap · TypeScript
