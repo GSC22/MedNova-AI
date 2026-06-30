@@ -351,8 +351,8 @@ mednova-ai/
 │                                    AITriageResponse, Zod schemas,
 │                                    RED_FLAG_KEYWORDS registry
 │
-├── .env.local                    ← API keys (never commit)
-├── .env.example                  ← Template (commit this)
+├── .env.local                    ← API keys 
+├── .env.example                  ← Template 
 ├── next.config.ts
 ├── tailwind.config.ts
 ├── tsconfig.json
