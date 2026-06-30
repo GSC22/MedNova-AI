@@ -225,6 +225,34 @@ interface OSMElement {
   tags?: Record<string, string>;
 }
 
+// ── Fetch hospitals via server-side proxy (avoids browser CORS) ─
+
+async function fetchFromOverpassWithFallback(
+  amenityList: string,
+  lat: number,
+  lng: number,
+  radius: number
+): Promise<{ elements: OSMElement[] }> {
+  const res = await fetch("/api/hospitals", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lat, lng, amenityList, radius }),
+    signal: AbortSignal.timeout(25_000),
+  });
+
+  const data = (await res.json()) as {
+    success: boolean;
+    elements?: OSMElement[];
+    error?: string;
+  };
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.error ?? `Proxy returned ${res.status}`);
+  }
+
+  return { elements: data.elements ?? [] };
+}
+
 async function fetchHospitalsByCity(
   lat: number, lng: number,
   filterId: FilterId,
@@ -233,27 +261,7 @@ async function fetchHospitalsByCity(
   const radius = 15000; // 15 km — wide net for city-level
   const amenityList = [...new Set([...filter.osmTags, "hospital"])].join("|");
 
-  const query = `
-    [out:json][timeout:25];
-    (
-      node["amenity"~"${amenityList}"](around:${radius},${lat},${lng});
-      way["amenity"~"${amenityList}"](around:${radius},${lat},${lng});
-      relation["amenity"~"${amenityList}"](around:${radius},${lat},${lng});
-      node["healthcare"~"hospital|clinic"](around:${radius},${lat},${lng});
-      way["healthcare"~"hospital|clinic"](around:${radius},${lat},${lng});
-    );
-    out center tags;
-  `;
-
-  const res = await fetch("https://overpass-api.de/api/interpreter", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `data=${encodeURIComponent(query)}`,
-    signal: AbortSignal.timeout(25_000),
-  });
-  if (!res.ok) throw new Error("OSM fetch failed");
-
-  const data = (await res.json()) as { elements: OSMElement[] };
+  const data = await fetchFromOverpassWithFallback(amenityList, lat, lng, radius);
   const seen = new Set<string>();
   const results: NearbyFacility[] = [];
 
@@ -628,7 +636,9 @@ export default function EmergencyPanel({ isActive = false, detectedFlags = [] }:
       setFacilities(results);
       setLoadState("done");
     } catch (e) {
-      setLoadError("Failed to fetch hospital data. Please check your internet and try again.");
+      console.error("[MedNova] Hospital fetch failed:", e);
+      const reason = e instanceof Error ? e.message : "Unknown error";
+      setLoadError(`Failed to fetch hospital data (${reason}). All map servers may be busy — please try Refresh in a moment.`);
       setLoadState("error");
     }
   }, []);
