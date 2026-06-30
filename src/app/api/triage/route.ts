@@ -334,7 +334,7 @@ function parseAndValidateAIResponse(
         ? Math.min(100, Math.max(0, parsed.dataQualityScore))
         : 0,
     bodySystems: Array.isArray(parsed.bodySystems)
-      ? (parsed.bodySystems as string[])
+      ? parsed.bodySystems.filter((s): s is string => typeof s === "string")
       : [],
     disclaimer:
       typeof parsed.disclaimer === "string"
