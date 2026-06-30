@@ -176,7 +176,7 @@ export interface AITriageResponse {
   isInconclusive: boolean;
   safetyAdvice: string | null;
   dataQualityScore: number;          // 0–100: completeness of case history
-  bodySystems: string[];             // Affected body systems (free-form labels from AI)
+  bodySystems: BodySystem[];
   disclaimer: string;
 }
 
