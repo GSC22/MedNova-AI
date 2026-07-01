@@ -694,13 +694,19 @@ function DeveloperCard() {
         />
 
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 relative z-10">
+          
           {/* Developer Image Avatar Container */}
           <div className="relative flex-shrink-0">
-            <div className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-700/50 flex items-center justify-center overflow-hidden p-0.5 shadow-lg group-hover:border-cyan-500/40 transition-colors duration-300">
+            {/* Added relative layout for absolute child stacking */}
+            <div className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-700/50 flex items-center justify-center overflow-hidden p-0.5 shadow-lg group-hover:border-cyan-500/40 transition-colors duration-300 relative">
+              
+              {/* Image Element with frontend restriction safeguards */}
               <img 
                 src="/developer-photo.jpg" 
                 alt="Developer Avatar" 
-                className="w-full h-full object-cover rounded-xl"
+                draggable="false" // 
+                className="w-full h-full object-cover rounded-xl select-none pointer-events-none" // 
+                onContextMenu={(e) => e.preventDefault()} // 
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                   const parent = e.currentTarget.parentElement;
@@ -712,9 +718,14 @@ function DeveloperCard() {
                   }
                 }}
               />
+              <div 
+                className="absolute inset-0 bg-transparent rounded-xl z-20"
+                onContextMenu={(e) => e.preventDefault()}
+              />
             </div>
+            
             {/* Cyberpunk network node indicator */}
-            <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-cyan-500 border-2 border-slate-950 shadow-sm shadow-cyan-500/50" />
+            <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-cyan-500 border-2 border-slate-950 shadow-sm shadow-cyan-500/50 z-30" />
           </div>
 
           {/* Developer Info Text */}
