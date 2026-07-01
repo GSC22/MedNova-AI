@@ -662,6 +662,102 @@ function StatsOverview() {
   );
 }
 
+// ── Developer Profile Component ────────────────────────
+
+function DeveloperCard() {
+  return (
+    <div className="mt-12 space-y-4">
+      {/* Section Header */}
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+        <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-slate-800 bg-slate-950/40 backdrop-blur-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+          <h3 className="text-xs font-mono uppercase tracking-widest text-slate-400">
+            Know About the Developer
+          </h3>
+        </div>
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-slate-800 to-transparent" />
+      </div>
+
+      {/* Main Profile Card */}
+      <div className="rounded-2xl border border-slate-800/60 bg-gradient-to-b from-slate-900/30 to-slate-950/50 p-6 relative overflow-hidden group backdrop-blur-sm shadow-xl">
+        {/* Subtle corner grid accent to match clinical styling */}
+        <div 
+          className="absolute right-0 bottom-0 w-32 h-32 opacity-[0.02] pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(6, 182, 212, 0.8) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(6, 182, 212, 0.8) 1px, transparent 1px)
+            `,
+            backgroundSize: "16px 16px",
+          }}
+        />
+
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 relative z-10">
+          {/* Developer Image Avatar Container */}
+          <div className="relative flex-shrink-0">
+            <div className="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-700/50 flex items-center justify-center overflow-hidden p-0.5 shadow-lg group-hover:border-cyan-500/40 transition-colors duration-300">
+              <img 
+                src="/developer-photo.jpg" 
+                alt="Developer Avatar" 
+                className="w-full h-full object-cover rounded-xl"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const parent = e.currentTarget.parentElement;
+                  if (parent && !parent.querySelector('.fallback-node')) {
+                    const fallback = document.createElement("div");
+                    fallback.className = "fallback-node text-cyan-400 font-mono text-xs flex items-center justify-center h-full uppercase tracking-wider";
+                    fallback.innerText = "DEV_OBJ";
+                    parent.appendChild(fallback);
+                  }
+                }}
+              />
+            </div>
+            {/* Cyberpunk network node indicator */}
+            <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-cyan-500 border-2 border-slate-950 shadow-sm shadow-cyan-500/50" />
+          </div>
+
+          {/* Developer Info Text */}
+          <div className="flex-1 text-center sm:text-left space-y-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span className="text-[10px] font-mono text-cyan-500 tracking-widest block uppercase">
+                  Developer & AI Engineer
+                </span>
+                <h4 className="text-base font-bold text-white tracking-tight group-hover:text-cyan-100 transition-colors">
+                  Gurpreet Singh Chhabra
+                </h4>
+              </div>
+              {/* Core Engine Build Status */}
+              <div className="flex items-center justify-center sm:justify-start gap-2 font-mono text-[11px]">
+                <span className="px-2 py-0.5 rounded border border-cyan-500/20 bg-cyan-500/5 text-cyan-400">
+                  ✅
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-400 leading-relaxed max-w-2xl">
+              Artificial Intelligence and Deep Learning software engineer. Certified in Google AI Essentials 
+              with domain expertise in computer vision modeling, neural architecture design, and intelligent automation systems. 
+              Focused on building production-ready analytical pipelines, high-performance 3D spatial engines, and responsive application interfaces.
+            </p>
+
+            {/* Core Tech Stack Pill badging */}
+            <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 pt-1 text-[10px] font-mono text-slate-500">
+              <span className="px-2 py-0.5 rounded bg-slate-900/40 border border-slate-800/40 text-slate-400">Python</span>
+              <span className="px-2 py-0.5 rounded bg-slate-900/40 border border-slate-800/40 text-slate-400">Deep Learning</span>
+              <span className="px-2 py-0.5 rounded bg-slate-900/40 border border-slate-800/40 text-slate-400">Computer Vision</span>
+              <span className="px-2 py-0.5 rounded bg-slate-900/40 border border-slate-800/40 text-slate-400">MediaPipe</span>
+              <span className="px-2 py-0.5 rounded bg-slate-900/40 border border-slate-800/40 text-slate-400">Next.js 14</span>
+              <span className="px-2 py-0.5 rounded bg-slate-900/40 border border-slate-800/40 text-slate-400">Tailwind CSS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Dashboard Page ───────────────────────────────────────
 
 export default function DashboardPage() {
@@ -775,6 +871,7 @@ export default function DashboardPage() {
                       onTriageLevelChange={handleTriageLevelChange}
                     />
                   </div>
+                  <DeveloperCard />
                 </div>
               )}
 
